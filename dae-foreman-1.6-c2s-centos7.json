@@ -1,0 +1,42 @@
+{
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": ""
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "us-east-1",
+    "source_ami_filter": {
+      "filters": {
+      "virtualization-type": "hvm",
+      "name": "CentOS Linux 7 x86_64 HVM EBS 1708_11.01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-95096eef.4",
+      "root-device-type": "ebs"
+      },
+      "owners": ["679593333241"],
+      "most_recent": true
+    },
+    "instance_type": "t2.large",
+    "ssh_username": "centos",
+    "ami_name": "dae-foreman-1.16-c2s-centos-7 {{timestamp}}"
+  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline":[
+         "sudo /bin/yum -y install epel-release",
+         "sudo /bin/yum -y install https://yum.puppetlabs.com/puppet5/puppet5-release-el-7.noarch.rpm",
+         "sudo /bin/yum -y install https://yum.theforeman.org/releases/1.16/el7/x86_64/foreman-release.rpm",
+         "sudo /bin/yum-config-manager --enable epel",
+         "sudo /bin/yum -y install foreman-installer",
+         "sudo foreman-installer",
+         "sudo /bin/yum -y install foreman-ec2",
+         "sudo sed -i 's/aws_access_key_id => user, :aws_secret_access_key => password/use_iam_profile => true/g' /usr/share/foreman/app/models/compute_resources/foreman/model/ec2.rb",
+         "sudo sed -i -e 's/amazonaws.com/c2s.ic.gov/g' /opt/theforeman/tfm/root/usr/share/gems/gems/fog-aws*/lib/fog/aws/compute.rb",
+         "sudo sed -i -e 's/amazonaws.com/us-iso-east-1.c2s.ic.gov/g' /opt/theforeman/tfm/root/usr/share/gems/gems/fog-aws*/lib/fog/aws/iam.rb",
+         "sudo sed -i -e 's/^.*@regions.*/      @regions ||= [\\u0027us-iso-east-1\\u0027]/g' /opt/theforeman/tfm/root/usr/share/gems/gems/fog-aws*/lib/fog/aws.rb",
+         "sudo sed -i -e 's/ssl_context = OpenSSL::SSL::SSLContext.new/ssl_context = OpenSSL::SSL::SSLContext.new\\n      params[:ssl_verify_peer] = false/g'  /opt/theforeman/tfm/root/usr/share/gems/gems/excon-*/lib/excon/ssl_socket.rb"
+      ]
+  }]
+}
