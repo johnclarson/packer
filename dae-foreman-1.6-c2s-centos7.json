@@ -37,7 +37,7 @@
          "sudo sed -i -e 's/amazonaws.com/c2s.ic.gov/g' /opt/theforeman/tfm/root/usr/share/gems/gems/fog-aws*/lib/fog/aws/compute.rb",
          "sudo sed -i -e 's/amazonaws.com/us-iso-east-1.c2s.ic.gov/g' /opt/theforeman/tfm/root/usr/share/gems/gems/fog-aws*/lib/fog/aws/iam.rb",
          "sudo sed -i -e 's/^.*@regions.*/      @regions ||= [\"us-iso-east-1\"]/g' /opt/theforeman/tfm/root/usr/share/gems/gems/fog-aws*/lib/fog/aws.rb",
-         "sudo sed -i -e 's/ssl_context = OpenSSL::SSL::SSLContext.new/ssl_context = OpenSSL::SSL::SSLContext.new\\n      params[:ssl_verify_peer] = false/g'  /opt/theforeman/tfm/root/usr/share/gems/gems/excon-*/lib/excon/ssl_socket.rb"
+         "sudo sed -i -e 's/ssl_context = OpenSSL::SSL::SSLContext.new/ssl_context = OpenSSL::SSL::SSLContext.new\\n      params[:ssl_verify_peer] = false/g'  /opt/theforeman/tfm/root/usr/share/gems/gems/excon-*/lib/excon/ssl_socket.rb",
          "echo '#!/bin/bash' | sudo tee --append /usr/sbin/foreman-fix",
          "echo 'HOSTNAME=`hostname`' | sudo tee --append /usr/sbin/foreman-fix",
          "echo 'check=`grep $HOSTNAME /etc/httpd/conf/httpd.conf`' | sudo tee --append /usr/sbin/foreman-fix",
