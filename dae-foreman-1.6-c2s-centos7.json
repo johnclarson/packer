@@ -11,20 +11,23 @@
     "source_ami_filter": {
       "filters": {
       "virtualization-type": "hvm",
-      "name": "CentOS Linux 7 x86_64 HVM EBS 1708_11.01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-95096eef.4",
+      "name": "DAE-CentOS-7-STIG-part-nofips",
       "root-device-type": "ebs"
       },
-      "owners": ["679593333241"],
+      "owners": ["736276421942"],
       "most_recent": true
     },
     "instance_type": "t2.large",
-    "ssh_username": "centos",
+    "ssh_username": "maintuser",
     "ami_name": "dae-foreman-1.16-c2s-centos-7 {{timestamp}}"
   }],
   "provisioners": [
     {
       "type": "shell",
       "inline":[
+         "sudo firewall-cmd --zone=public --permanent --add-service=https",
+         "sudo firewall-cmd --zone=public --permanent --add-service=http",
+         "sudo firewall-cmd --zone=public --permanent --add-port=8443/tcp",
          "sudo /bin/yum -y install epel-release",
          "sudo /bin/yum -y install https://yum.puppetlabs.com/puppet5/puppet5-release-el-7.noarch.rpm",
          "sudo /bin/yum -y install https://yum.theforeman.org/releases/1.16/el7/x86_64/foreman-release.rpm",
@@ -67,6 +70,7 @@
          "echo '  hammer -u admin -p $PASSWORD host delete --name  $OLDHOSTNAME' | sudo tee --append /usr/sbin/foreman-fix",
          "echo '  hammer -u admin -p $PASSWORD proxy update --id 1 --new-name $HOSTNAME --url https://${HOSTNAME}:8443' | sudo tee --append /usr/sbin/foreman-fix",
          "echo '  hammer -u admin -p $PASSWORD compute-resource create --name=AWS --provider=EC2 --url=us-iso-east-1' | sudo tee --append /usr/sbin/foreman-fix",
+         "echo '  echo $PASSWORD | hammer -u admin -p $PASSWORD user update --login admin --password dae-foreman' | sudo tee --append /usr/sbin/foreman-fix",
          "echo '  /opt/puppetlabs/bin/puppet agent -tv' | sudo tee --append /usr/sbin/foreman-fix",
          "echo 'fi' | sudo tee --append /usr/sbin/foreman-fix",
          "sudo chmod +x /usr/sbin/foreman-fix",
