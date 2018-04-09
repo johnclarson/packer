@@ -39,7 +39,6 @@
          "sudo sed -i 's/aws_access_key_id => user, :aws_secret_access_key => password/use_iam_profile => true/g' /usr/share/foreman/app/models/compute_resources/foreman/model/ec2.rb",
          "sudo sed -i 's/validates/#validates/g' /usr/share/foreman/app/models/compute_resources/foreman/model/ec2.rb",
          "sudo /opt/puppetlabs/bin/puppet module install johnclarson-security",
-         "sudo /opt/puppetlabs/bin/puppet module install puppetlabs-inifile",
          "echo '#!/bin/bash' | sudo tee --append /usr/sbin/foreman-fix",
          "echo 'HOSTNAME=`hostname`' | sudo tee --append /usr/sbin/foreman-fix",
          "echo 'check=`grep $HOSTNAME /etc/httpd/conf/httpd.conf`' | sudo tee --append /usr/sbin/foreman-fix",
