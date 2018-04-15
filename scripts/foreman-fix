@@ -37,6 +37,8 @@ check=`hammer -u admin -p $NEWPASSWORD template list | grep DAE`
     if [ ! $check ]; then
     PUPPETRPM=`ls /var/lib/foreman/public/ | grep puppet-agent`
     hammer -u admin -p $NEWPASSWORD global-parameter set --name puppet_rpm --value $PUPPETRPM
+    hammer -u admin -p $NEWPASSWORD global-parameter set --name run-puppet-in-installer --value true
+    hammer -u admin -p $NEWPASSWORD global-parameter set --name enable-puppet5 --value true
     hammer -u admin -p $NEWPASSWORD template create --name dae_puppet_setup --file /root/packer/templates/dae_puppet_setup.erb --type snippet
     hammer -u admin -p $NEWPASSWORD template create --name "DAE UserData" --file /root/packer/templates/dae_userdata.erb --type user_data --operatingsystem-ids 1
     hammer -u admin -p $NEWPASSWORD template add-operatingsystem --name "Kickstart default finish" --operatingsystem-id 1
@@ -44,5 +46,4 @@ check=`hammer -u admin -p $NEWPASSWORD template list | grep DAE`
     NUM2=`hammer -u admin -p $NEWPASSWORD template list | grep "Kickstart default finish" | cut -d" " -f1`
     hammer -u admin -p $NEWPASSWORD os set-default-template  --config-template-id $NUM2 --id 1
     hammer -u admin -p $NEWPASSWORD os set-default-template  --config-template-id $NUM1 --id 1
-    hammer -u admin -p $NEWPASSWORD global-parameter set --name enable-puppet5 --value true
 fi
