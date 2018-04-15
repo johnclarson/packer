@@ -1,0 +1,13 @@
+[Unit]
+Description=Foreman Fix Service
+After=network.target httpd.service
+
+[Service]
+Type=forking
+TimeoutSec=5min
+User=root
+ExecStart=/usr/sbin/foreman-fix
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
