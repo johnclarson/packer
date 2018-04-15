@@ -45,4 +45,5 @@ check=`hammer -u admin -p $NEWPASSWORD template list | grep DAE`
     NUM1=`hammer -u admin -p $NEWPASSWORD template list | grep "DAE UserData" | cut -d" " -f1`
     NUM2=`hammer -u admin -p $NEWPASSWORD template list | grep "Kickstart default finish" | cut -d" " -f1`
     hammer -u admin -p $NEWPASSWORD os set-default-template  --config-template-id $NUM1 --id 1
+    hammer -u admin -p $NEWPASSWORD os set-default-template  --config-template-id $NUM2 --id 1
 fi
