@@ -32,8 +32,6 @@ if [ ! $check ]; then
     hammer -u admin -p $PASSWORD proxy import-classes --environment production --id 1
     echo $PASSWORD | hammer -u admin -p $PASSWORD user update --login admin --password $NEWPASSWORD
     /opt/puppetlabs/bin/puppet agent -tv
-    hammer -u admin -p $NEWPASSWORD host update --name $HOSTNAME --puppet-classes security
-    /opt/puppetlabs/bin/puppet agent -tv
 fi
 check=`hammer -u admin -p $NEWPASSWORD template list | grep DAE`
     if [ ! $check ]; then
@@ -44,7 +42,7 @@ check=`hammer -u admin -p $NEWPASSWORD template list | grep DAE`
     hammer -u admin -p $NEWPASSWORD template add-operatingsystem --name "Kickstart default finish" --operatingsystem-id 1
     NUM1=`hammer -u admin -p $NEWPASSWORD template list | grep "DAE UserData" | cut -d" " -f1`
     NUM2=`hammer -u admin -p $NEWPASSWORD template list | grep "Kickstart default finish" | cut -d" " -f1`
-    hammer -u admin -p $NEWPASSWORD os set-default-template  --config-template-id $NUM1 --id 1
     hammer -u admin -p $NEWPASSWORD os set-default-template  --config-template-id $NUM2 --id 1
+    hammer -u admin -p $NEWPASSWORD os set-default-template  --config-template-id $NUM1 --id 1
     hammer -u admin -p $NEWPASSWORD global-parameter set --name enable-puppet5 --value true
 fi
