@@ -3,28 +3,28 @@ HOSTNAME=`hostname`
 NEWPASSWORD=`curl -s http://169.254.169.254/latest/meta-data/instance-id`
 check=`grep $HOSTNAME /etc/httpd/conf/httpd.conf`
 if [ ! $check ]; then
-    OLDHOSTNAME=`grep \"server =\" /etc/puppetlabs/puppet/puppet.conf | cut -d\" \" -f7`
+    OLDHOSTNAME=`grep "server =" /etc/puppetlabs/puppet/puppet.conf | cut -d" " -f7`
     service httpd stop
     service foreman-proxy stop
     service puppetserver stop
     /opt/puppetlabs/bin/puppet cert -c $OLDHOSTNAME
     /opt/puppetlabs/bin/puppet cert -g $HOSTNAME --dns_alt_names=$HOSTNAME,puppet
-    sed -i \"s/$OLDHOSTNAME/$HOSTNAME/g\" /etc/httpd/conf.d/*.conf
-    sed -i \"s/$OLDHOSTNAME/$HOSTNAME/g\" /etc/puppetlabs/puppet/puppet.conf
-    sed -i \"s/$OLDHOSTNAME/$HOSTNAME/g\" /etc/foreman-proxy/settings.yml
-    sed -i \"s/$OLDHOSTNAME/$HOSTNAME/g\" /etc/foreman-proxy/settings.d/*.yml
-    sed -i \"s/$OLDHOSTNAME/$HOSTNAME/g\" /etc/foreman/settings.yaml
-    sed -i \"s/$OLDHOSTNAME/$HOSTNAME/g\" /etc/puppetlabs/puppet/foreman.yaml
-    sed -i \"s/$OLDHOSTNAME/$HOSTNAME/g\" /etc/puppetlabs/puppetserver/conf.d/webserver.conf
-    sed -i \"s/$OLDHOSTNAME/$HOSTNAME/g\" /etc/hammer/cli.modules.d/foreman.yml
-    sed -i \"s/$OLDHOSTNAME/$HOSTNAME/g\" /etc/httpd/conf/httpd.conf
-    sed -i \"s/$OLDHOSTNAME/$HOSTNAME/g\" /etc/puppetlabs/puppetserver/conf.d/auth.conf
+    sed -i "s/$OLDHOSTNAME/$HOSTNAME/g" /etc/httpd/conf.d/*.conf
+    sed -i "s/$OLDHOSTNAME/$HOSTNAME/g" /etc/puppetlabs/puppet/puppet.conf
+    sed -i "s/$OLDHOSTNAME/$HOSTNAME/g" /etc/foreman-proxy/settings.yml
+    sed -i "s/$OLDHOSTNAME/$HOSTNAME/g" /etc/foreman-proxy/settings.d/*.yml
+    sed -i "s/$OLDHOSTNAME/$HOSTNAME/g" /etc/foreman/settings.yaml
+    sed -i "s/$OLDHOSTNAME/$HOSTNAME/g" /etc/puppetlabs/puppet/foreman.yaml
+    sed -i "s/$OLDHOSTNAME/$HOSTNAME/g" /etc/puppetlabs/puppetserver/conf.d/webserver.conf
+    sed -i "s/$OLDHOSTNAME/$HOSTNAME/g" /etc/hammer/cli.modules.d/foreman.yml
+    sed -i "s/$OLDHOSTNAME/$HOSTNAME/g" /etc/httpd/conf/httpd.conf
+    sed -i "s/$OLDHOSTNAME/$HOSTNAME/g" /etc/puppetlabs/puppetserver/conf.d/auth.conf
     service puppetserver start
     service httpd start
     service foreman-proxy start
     foreman-rake permissions:reset > /root/credentials
     chmod 400 /root/credentials
-    PASSWORD=`cut -d\" \" -f6 /root/credentials`
+    PASSWORD=`cut -d" " -f6 /root/credentials`
     hammer -u admin -p $PASSWORD host delete --name  $OLDHOSTNAME
     hammer -u admin -p $PASSWORD proxy update --id 1 --new-name $HOSTNAME --url https://${HOSTNAME}:8443
     hammer -u admin -p $PASSWORD compute-resource create --name=AWS --provider=EC2 --url=us-east-1
@@ -40,10 +40,10 @@ check=`hammer -u admin -p $NEWPASSWORD template list | grep DAE`
     PUPPETRPM=`ls /var/lib/foreman/public/ | grep puppet-agent`
     hammer -u admin -p $NEWPASSWORD global-parameter set --name puppet_rpm --value $PUPPETRPM
     hammer -u admin -p $NEWPASSWORD template create --name dae_puppet_setup --file /root/packer/templates/dae_puppet_setup.erb --type snippet
-    hammer -u admin -p $NEWPASSWORD template create --name \"DAE UserData\" --file /root/packer/templates/dae_userdata.erb --type user_data --operatingsystem-ids 1
-    hammer -u admin -p $NEWPASSWORD template add-operatingsystem --name \"Kickstart default finish\" --operatingsystem-id 1
-    NUM1=`hammer -u admin -p $NEWPASSWORD template list | grep \"DAE UserData\" | cut -d\" \" -f1`
-    NUM2=`hammer -u admin -p $NEWPASSWORD template list | grep \"Kickstart default finish\" | cut -d\" \" -f1`
+    hammer -u admin -p $NEWPASSWORD template create --name "DAE UserData" --file /root/packer/templates/dae_userdata.erb --type user_data --operatingsystem-ids 1
+    hammer -u admin -p $NEWPASSWORD template add-operatingsystem --name "Kickstart default finish" --operatingsystem-id 1
+    NUM1=`hammer -u admin -p $NEWPASSWORD template list | grep "DAE UserData" | cut -d" " -f1`
+    NUM2=`hammer -u admin -p $NEWPASSWORD template list | grep "Kickstart default finish" | cut -d" " -f1`
     hammer -u admin -p $NEWPASSWORD os set-default-template  --config-template-id $NUM1 --id 1
     hammer -u admin -p $NEWPASSWORD os set-default-template  --config-template-id $NUM2 --id 1
     hammer -u admin -p $NEWPASSWORD global-parameter set --name enable-puppet5 --value true
