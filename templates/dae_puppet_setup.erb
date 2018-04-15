@@ -21,7 +21,7 @@ elsif os_family == 'Windows'
   etc_path = 'C:\ProgramData\PuppetLabs\puppet\etc'
   bin_path = 'C:\Program Files\Puppet Labs\Puppet\bin'
 elsif aio_enabled
-  linux_package = "http://<%= @host.puppetmaster %>/<%= host_param('puppet_rpm') %>"
+  linux_package = 'puppet-agent'
   etc_path = '/etc/puppetlabs/puppet'
   bin_path = '/opt/puppetlabs/bin'
 else
@@ -38,9 +38,9 @@ apt-get install -y <%= linux_package %>
 pkg install -y <%= freebsd_package %>
 <% elsif os_family == 'Redhat' -%>
 if [ -f /usr/bin/dnf ]; then
-  dnf -y install <%= linux_package %>
+  dnf -y install http://<%= @host.puppetmaster %>/<%= host_param('puppet_rpm') %>
 else
-  yum -t -y install <%= linux_package %>
+  yum -t -y install http://<%= @host.puppetmaster %>/<%= host_param('puppet_rpm') %>
 fi
 <% elsif os_family == 'Suse' -%>
 <% if host_param_true?('enable-puppetlabs-pc1-repo') || host_param_true?('enable-puppetlabs-puppet5-repo') -%>
