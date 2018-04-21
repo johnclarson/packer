@@ -31,6 +31,7 @@ if [ ! $check ]; then
     hammer -u admin -p $PASSWORD environment create --name=production
     hammer -u admin -p $PASSWORD proxy import-classes --environment production --id 1
     echo $PASSWORD | hammer -u admin -p $PASSWORD user update --login admin --password $NEWPASSWORD
+    sleep 60
     /opt/puppetlabs/bin/puppet agent -tv
 fi
 check=`hammer -u admin -p $NEWPASSWORD template list | grep DAE`
