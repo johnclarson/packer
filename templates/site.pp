@@ -1,4 +1,4 @@
 node "default" {
    include security
-   include yum
+   include customyum
 }
