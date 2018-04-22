@@ -39,6 +39,7 @@
          "sudo sed -i 's/aws_access_key_id => user, :aws_secret_access_key => password/use_iam_profile => true/g' /usr/share/foreman/app/models/compute_resources/foreman/model/ec2.rb",
          "sudo sed -i 's/validates/#validates/g' /usr/share/foreman/app/models/compute_resources/foreman/model/ec2.rb",
          "sudo /opt/puppetlabs/bin/puppet module install johnclarson-security",
+         "sudo /opt/puppetlabs/bin/puppet module install johnclarson-customyum",
          "sudo  yum reinstall --downloadonly --downloaddir=/var/lib/foreman/public/ puppet-agent",
          "sudo -i git clone https://github.com/johnclarson/packer.git",
          "sudo rm -f /root/packer/*.json",

@@ -40,6 +40,10 @@ check=`hammer -u admin -p $NEWPASSWORD template list | grep DAE`
     hammer -u admin -p $NEWPASSWORD global-parameter set --name puppet_rpm --value $PUPPETRPM
     hammer -u admin -p $NEWPASSWORD global-parameter set --name run-puppet-in-installer --value true
     hammer -u admin -p $NEWPASSWORD global-parameter set --name enable-puppet5 --value true
+    hammer -u admin -p $NEWPASSWORD global-parameter set --name custom_centos_gpgkey --value ""
+    hammer -u admin -p $NEWPASSWORD global-parameter set --name custom_centos_base_url --value ""
+    hammer -u admin -p $NEWPASSWORD global-parameter set --name custom_centos_updates_url --value ""
+    hammer -u admin -p $NEWPASSWORD global-parameter set --name custom_yum --value false
     hammer -u admin -p $NEWPASSWORD template create --name dae_puppet_setup --file /root/packer/templates/dae_puppet_setup.erb --type snippet
     hammer -u admin -p $NEWPASSWORD template create --name "DAE UserData" --file /root/packer/templates/dae_userdata.erb --type user_data --operatingsystem-ids 1
     hammer -u admin -p $NEWPASSWORD template add-operatingsystem --name "Kickstart default finish" --operatingsystem-id 1
