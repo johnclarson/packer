@@ -45,6 +45,8 @@
          "sudo rm -f /root/packer/*.json",
          "sudo rm -f /root/packer/README.md",
          "sudo rm -rf /root/packer/.git",
+         "sudo su - postgres -c 'dropdb  postgres'",
+         "sudo rm -f /home/maintuser/.ssh/authorized_keys",
          "sudo cp /root/packer/scripts/foreman-fix /usr/sbin/foreman-fix",
          "sudo chmod +x /usr/sbin/foreman-fix",
          "sudo cp /root/packer/scripts/foreman-fix.service /etc/systemd/system/foreman-fix.service",
